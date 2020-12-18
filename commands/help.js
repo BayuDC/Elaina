@@ -5,16 +5,15 @@ module.exports = {
     description: "List of all commands or info about a specific command",
     aliases: ["command", "h"],
     usage: "[command name]",
-    execute(message, args) {
+    async execute(message, args) {
         const { commands } = message.client;
         if (!args.length) {
             // ? list of all commands
             const commandList = commands
                 .map((command) => `- ${command.name}`)
                 .join("\n");
-
-            return message.author
-                .send(
+            try {
+                await message.author.send(
                     new MessageEmbed()
                         .setColor("#4cd137")
                         .setAuthor(
@@ -26,25 +25,23 @@ module.exports = {
                         .setDescription(
                             `${commandList}\n\nUse \`${prefix}help [command name]\` to get info about a specific command`
                         )
-                )
-                .then(() => {
-                    if (message.channel.type == "dm") return;
-
-                    message.channel.send(
-                        new MessageEmbed()
-                            .setDescription(
-                                "I have sent you a DM with all my commands!"
-                            )
-                            .setColor("#00a8ff")
-                    );
-                })
-                .catch((error) => {
-                    message.channel.send(
-                        new MessageEmbed()
-                            .setDescription("it seems like I can't DM you!")
-                            .setColor("#e74c3c")
-                    );
-                });
+                );
+                if (message.channel.type == "dm") return;
+                await message.channel.send(
+                    new MessageEmbed()
+                        .setDescription(
+                            "I have sent you a DM with all my commands!"
+                        )
+                        .setColor("#00a8ff")
+                );
+            } catch (error) {
+                await message.channel.send(
+                    new MessageEmbed()
+                        .setDescription("it seems like I can't DM you!")
+                        .setColor("#e74c3c")
+                );
+            }
+            return;
         }
         // ? info about a specific command
         const commandName = args[0].toLowerCase();
@@ -54,7 +51,7 @@ module.exports = {
                 (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
             );
         if (!command)
-            return message.channel.send(
+            return await message.channel.send(
                 new MessageEmbed()
                     .setDescription("That is not a valid command!")
                     .setColor("#e74c3c")
@@ -76,6 +73,6 @@ module.exports = {
         if (command.cooldown)
             embed.addField("Cooldown", `${command.cooldown} second(s)`);
 
-        message.channel.send(embed);
+        await message.channel.send(embed);
     },
 };

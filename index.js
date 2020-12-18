@@ -18,7 +18,7 @@ const cooldowns = new Discord.Collection();
 client.once("ready", () => {
     console.log("Bot is ready");
 });
-client.on("message", (message) => {
+client.on("message", async (message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -70,7 +70,7 @@ client.on("message", (message) => {
 
     // ? command execute
     try {
-        command.execute(message, args);
+        await command.execute(message, args);
     } catch (error) {
         console.log(error);
     }

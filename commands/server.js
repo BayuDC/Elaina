@@ -4,9 +4,9 @@ module.exports = {
     description: "Show the server's info",
     guildOnly: true,
     aliases: ["guild"],
-    execute(message, args) {
+    async execute(message, args) {
         const guild = message.guild;
-        message.channel.send(
+        await message.channel.send(
             new MessageEmbed()
                 .setColor("#00a8ff")
                 .setAuthor(guild.name, guild.iconURL({ dynamic: true }))

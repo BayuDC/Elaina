@@ -2,9 +2,9 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: "ping",
     description: "Test connection",
-    aliases: ["tes", "p"],
-    execute(message, args) {
-        message.channel.send(
+    aliases: ["test", "p"],
+    async execute(message, args) {
+        await message.channel.send(
             new MessageEmbed()
                 .setTitle("Pong!")
                 .setColor("#00a8ff")
