@@ -1,12 +1,15 @@
 const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: "ping",
-    description: "Test connection",
+    description: "Mengetes koneksi internet",
     aliases: ["test", "p"],
     async execute(message, args) {
         await message.channel.send(
             new MessageEmbed()
-                .setTitle("Pong!")
+                .setAuthor(
+                    "Pong!",
+                    message.client.user.displayAvatarURL({ dynamic: true })
+                )
                 .setColor("#00a8ff")
                 .addField(
                     "Gateway",

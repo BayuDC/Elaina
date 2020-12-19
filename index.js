@@ -33,15 +33,17 @@ client.on("message", async (message) => {
     // ! required args commands
     if (command.args && !args.length)
         return message.channel.send(
-            errorEmbed.setDescription(
-                `Invalid command usage!\nUse \`${prefix}help\` to get some help`
-            )
+            errorEmbed
+                .setAuthor("Penggunaan command tidak benar!")
+                .setDescription(
+                    `Ketik \`${prefix}help\` untuk menampilkan cara menggunakan command`
+                )
         );
     // ! server only commands
     if (command.guildOnly && message.channel.type == "dm")
         return message.channel.send(
             errorEmbed.setDescription(
-                "I can't execute that command inside DMs!"
+                "Command tersebut tidak bisa digunakan di sini!"
             )
         );
     // ! command cooldown
@@ -58,9 +60,11 @@ client.on("message", async (message) => {
             const timeLeft = (expirationTime - now) / 1000;
             return message.channel.send(
                 errorEmbed.setDescription(
-                    `Please wait ${timeLeft.toFixed(
+                    `Tolong tunggu ${timeLeft.toFixed(
                         1
-                    )} second(s) before reusing the \`${command.name}\` command`
+                    )} detik sebelum menggunakan command \`${
+                        command.name
+                    }\` lagi`
                 )
             );
         }

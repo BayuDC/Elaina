@@ -1,8 +1,8 @@
 module.exports = {
     name: "say",
-    description: "Say something you want",
+    description: "Mengatakan sesuatu yang kamu inginkan",
     args: true,
-    usage: "<any>",
+    usage: "<apapun>",
     async execute(message, args) {
         const i =
             message.content.toLowerCase().indexOf(this.name) + this.name.length;

@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: "user",
-    description: "Show the user's info",
+    description: "Menampilkan informasi dari user",
     usage: "[user]",
     async execute(message, args) {
         const sendUserInfo = async (user) => {
@@ -15,14 +15,14 @@ module.exports = {
                     user.presence.status.charAt(0).toUpperCase() +
                         user.presence.status.slice(1)
                 )
-                .addField("Is Human", user.bot ? "No" : "Yes")
+                .addField("Tipe", user.bot ? "Bot" : "Manusia")
                 .addField(
-                    "Created Date",
+                    "Tanggal Dibuat",
                     `${user.createdAt.getDate()}/${user.createdAt.getMonth()}/${user.createdAt.getFullYear()}`
                 );
             if (message.channel.type != "dm")
                 embed.addField(
-                    "Joined Date",
+                    "Tanggal Bergabung",
                     `${message.guild
                         .member(user)
                         .joinedAt.getDate()}/${message.guild

@@ -2,9 +2,9 @@ const { MessageEmbed } = require("discord.js");
 const { prefix } = require("../config.json");
 module.exports = {
     name: "help",
-    description: "List of all commands or info about a specific command",
+    description: "Menampilkan daftar command dan cara penggunaannya",
     aliases: ["command", "h"],
-    usage: "[command name]",
+    usage: "[nama command]",
     async execute(message, args) {
         const { commands } = message.client;
         if (!args.length) {
@@ -17,27 +17,25 @@ module.exports = {
                     new MessageEmbed()
                         .setColor("#4cd137")
                         .setAuthor(
-                            "My Commands",
+                            "Daftar Command",
                             message.client.user.displayAvatarURL({
                                 dynamic: true,
                             })
                         )
                         .setDescription(
-                            `${commandList}\n\nUse \`${prefix}help [command name]\` to get info about a specific command`
+                            `${commandList}\n\nKetik \`${prefix}help [nama command]\` untuk menampilkan cara penggunaannya`
                         )
                 );
                 if (message.channel.type == "dm") return;
                 await message.channel.send(
                     new MessageEmbed()
-                        .setDescription(
-                            "I have sent you a DM with all my commands!"
-                        )
+                        .setDescription("Bantuan telah dikirimkan via DM")
                         .setColor("#00a8ff")
                 );
             } catch (error) {
                 await message.channel.send(
                     new MessageEmbed()
-                        .setDescription("it seems like I can't DM you!")
+                        .setDescription("Bantuan gagal dikirimkan via DM")
                         .setColor("#e74c3c")
                 );
             }
@@ -53,7 +51,7 @@ module.exports = {
         if (!command)
             return await message.channel.send(
                 new MessageEmbed()
-                    .setDescription("That is not a valid command!")
+                    .setDescription("Command tidak ditemukan!")
                     .setColor("#e74c3c")
             );
         const embed = new MessageEmbed()
@@ -63,15 +61,15 @@ module.exports = {
                 command.description
             )
             .addField(
-                "Usage",
+                "Cara Menggunakan",
                 `\`${prefix}${command.name}${
                     command.usage ? " " + command.usage : ""
                 }\``
             );
         if (command.aliases)
-            embed.addField("Aliases", `\`${command.aliases.join(", ")}\``);
+            embed.addField("Nama Lain", `\`${command.aliases.join(", ")}\``);
         if (command.cooldown)
-            embed.addField("Cooldown", `${command.cooldown} second(s)`);
+            embed.addField("Cooldown", `${command.cooldown} detik`);
 
         await message.channel.send(embed);
     },
