@@ -5,15 +5,16 @@ const { prefix, token } = require("./config.json");
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-const commandFiles = fs
-    .readdirSync("./commands")
-    .filter((file) => file.endsWith(".js"));
+const commandFiles = fs.readdirSync("./commands").filter((file) => file.endsWith(".js"));
 commandFiles.forEach((file) => {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 });
 
 const cooldowns = new Discord.Collection();
+
+client.queue = new Discord.Collection();
+client.playingMessages = new Discord.Collection();
 
 client.once("ready", () => {
     console.log("Bot is ready");
@@ -24,9 +25,7 @@ client.on("message", async (message) => {
     const commandName = args.shift().toLowerCase();
     const command =
         client.commands.get(commandName) ||
-        client.commands.find(
-            (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
-        );
+        client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
     const errorEmbed = new Discord.MessageEmbed().setColor("#e74c3c");
@@ -35,17 +34,11 @@ client.on("message", async (message) => {
         return message.channel.send(
             errorEmbed
                 .setAuthor("Penggunaan command tidak benar!")
-                .setDescription(
-                    `Ketik \`${prefix}help\` untuk menampilkan cara menggunakan command`
-                )
+                .setDescription(`Ketik \`${prefix}help\` untuk menampilkan cara menggunakan command`)
         );
     // ! server only commands
     if (command.guildOnly && message.channel.type == "dm")
-        return message.channel.send(
-            errorEmbed.setDescription(
-                "Command tersebut tidak bisa digunakan di sini!"
-            )
-        );
+        return message.channel.send(errorEmbed.setDescription("Command tersebut tidak bisa digunakan di sini!"));
     // ! command cooldown
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
@@ -54,17 +47,12 @@ client.on("message", async (message) => {
     const timestamps = cooldowns.get(command.name);
     const cooldownAmount = (command.cooldown || 0) * 1000;
     if (timestamps.has(message.author.id)) {
-        const expirationTime =
-            timestamps.get(message.author.id) + cooldownAmount;
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
             return message.channel.send(
                 errorEmbed.setDescription(
-                    `Tolong tunggu ${timeLeft.toFixed(
-                        1
-                    )} detik sebelum menggunakan command \`${
-                        command.name
-                    }\` lagi`
+                    `Tolong tunggu ${timeLeft.toFixed(1)} detik sebelum menggunakan command \`${command.name}\` lagi`
                 )
             );
         }

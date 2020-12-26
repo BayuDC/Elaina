@@ -1,38 +1,24 @@
-const { MessageEmbed } = require("discord.js");
-
 module.exports = {
     name: "leave",
-    description: "Keluar dari voice channel",
+    description: "Mengeluarkan Elaina dari voice channel",
     guildOnly: true,
     async execute(message, args) {
-        const { channel, connection } = message.guild.me.voice;
-        if (!channel)
-            return await message.channel.send(
-                new MessageEmbed().setColor("#00a8ff").setDescription("Aku sudah tidak berada di voice channel")
-            );
-        if (channel.members.filter((member) => !member.user.bot && !member.user.equals(message.author)).size)
-            return await message.channel.send(
-                new MessageEmbed()
-                    .setColor("#e74c3c")
-                    .setDescription("Tidak bisa keluar sekarang!\nAku masih dibutuhkan disini")
-            );
+        const { channel, guild } = message;
+        const voice = guild.me.voice;
+        if (!voice.channel) return channel.send("Aku sudah tidak berada di voice channel");
+        if (voice.channel.members.filter((member) => !member.user.bot && !member.user.equals(message.author)).size)
+            return channel.send("Tidak bisa keluar sekarang! Aku masih dibutuhkan disini");
 
         const disconnect = async () => {
             try {
-                if (connection.status != 0) throw "wait";
+                if (voice.connection.status != 0) throw "wait";
 
-                connection.disconnect();
-                await message.channel.send(
-                    new MessageEmbed().setColor("#4cd137").setDescription("Berhasil keluar dari voice channel")
-                );
+                voice.connection.disconnect();
+                await channel.send("Berhasil keluar dari voice channel");
             } catch (error) {
                 if (error == "wait") return setTimeout(() => disconnect(), 500);
 
-                await message.channel.send(
-                    new MessageEmbed()
-                        .setColor("#e74c3c")
-                        .setDescription("Gagal keluar dari voice channel!\nSilahkan coba lagi!")
-                );
+                await channel.send("Tidak bisa keluar dari voice channel! Silahkan coba lagi!");
             }
         };
         await disconnect();

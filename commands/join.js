@@ -1,27 +1,38 @@
-const { MessageEmbed } = require("discord.js");
-
 module.exports = {
     name: "join",
-    description: "Bergabung ke voice channel",
+    description: "Mamanggil Elaina ke voice channel",
     guildOnly: true,
     async execute(message, args) {
-        const voiceChannel = message.member.voice.channel;
-        const clientVoiceChannel = message.guild.me.voice.channel;
+        const { client, channel, guild, member } = message;
+        const memberChannel = member.voice.channel;
+        const clientChannel = guild.me.voice.channel;
 
-        if (!voiceChannel)
-            return await message.channel.send(
-                new MessageEmbed()
-                    .setColor("#e74c3c")
-                    .setDescription("Kamu harus bergabung ke voice channel terlebih dahulu!")
-            );
-        if (clientVoiceChannel && clientVoiceChannel.members.filter((member) => !member.user.bot).size)
-            return await message.channel.send(
-                new MessageEmbed().setColor("#00a8ff").setDescription(`Aku sudah berada di voice channel`)
-            );
+        if (!memberChannel) return channel.send("Kamu harus berada di voice channel terlebih dahulu!");
+        if (clientChannel && clientChannel.members.filter((member) => !member.user.bot).size)
+            return channel.send("Aku sudah berada di voice channel!");
 
-        await voiceChannel.join();
-        await message.channel.send(
-            new MessageEmbed().setColor("#4cd137").setDescription("Berhasil bergabung ke voice channel")
-        );
+        const waitingMessage = await channel.send("Tunggu sebentar ya...");
+        const temp = guild.me.voice.connection;
+        const connection = await memberChannel.join();
+        if (!temp) {
+            connection.on("disconnect", () => {
+                if (client.playingMessages.has(guild.id)) {
+                    client.playingMessages.get(guild.id).delete();
+                    client.playingMessages.delete(guild.id);
+                }
+                if (client.queue.has(guild.id)) {
+                    client.queue.delete(guild.id);
+                }
+            });
+            guild.me.voice.setSelfDeaf(true);
+        }
+        waitingMessage.delete();
+        await channel.send("Berhasil bergabung ke voice channel");
+
+        if (!client.queue.has(guild.id)) {
+            client.queue.set(guild.id, []);
+        }
+
+        return "success";
     },
 };
