@@ -1,4 +1,5 @@
 {
     "prefix": "//",
-    "token": "bot-token"
+    "token": "bot-token",
+    "youtubeKey": "youtube-api-token"
 }
