@@ -17,6 +17,8 @@ client.queue = new Discord.Collection();
 client.playingMessages = new Discord.Collection();
 
 client.once("ready", () => {
+    client.user.setActivity("Hentai", { type: "WATCHING" });
+    client.user.setStatus("idle");
     console.log("Bot is ready");
 });
 client.on("message", async (message) => {
