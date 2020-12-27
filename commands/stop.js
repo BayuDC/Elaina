@@ -1,6 +1,7 @@
 module.exports = {
     name: "stop",
     description: "Menghentikan musik yang dimainkan",
+    aliases: ["s"],
     guildOnly: true,
     async execute(message, args) {
         const { channel, client, guild, member } = message;

@@ -1,6 +1,7 @@
 module.exports = {
     name: "join",
     description: "Mamanggil Elaina ke voice channel",
+    aliases: ["j", "connect"],
     guildOnly: true,
     async execute(message, args) {
         const { client, channel, guild, member } = message;

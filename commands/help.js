@@ -3,7 +3,7 @@ const { prefix } = require("../config.json");
 module.exports = {
     name: "help",
     description: "Menampilkan daftar command dan cara penggunaannya",
-    aliases: ["command", "h"],
+    aliases: ["h", "command"],
     usage: "[nama command]",
     async execute(message, args) {
         const { commands } = message.client;

@@ -1,6 +1,7 @@
 module.exports = {
     name: "leave",
     description: "Mengeluarkan Elaina dari voice channel",
+    aliases: ["l", "quit", "disconnect", "dc"],
     guildOnly: true,
     async execute(message, args) {
         const { channel, guild } = message;

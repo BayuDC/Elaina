@@ -3,6 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: "queue",
     description: "Menampilkan daftar antrian musik",
+    aliases: ["q", "list"],
     guildOnly: true,
     async execute(message, args) {
         const {

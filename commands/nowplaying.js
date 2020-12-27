@@ -1,6 +1,8 @@
 module.exports = {
     name: "nowplaying",
     description: "Menamplikan musik yang sedang dimainkan",
+    aliases: ["np"],
+    guildOnly: true,
     async execute(message, args) {
         const {
             client: { playingMessages },

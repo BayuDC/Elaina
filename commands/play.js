@@ -4,13 +4,13 @@ const { validateURL, getURLVideoID } = require("ytdl-core");
 const fetch = require("node-fetch");
 const join = require("../commands/join");
 const music = require("../include/music");
-const { includes } = require("ffmpeg-static");
 module.exports = {
     name: "play",
     description: "Memainkan musik dari Youtube",
     guildOnly: true,
     args: true,
-    usage: "<url>",
+    aliases: ["p"],
+    usage: "<judul musik / url>",
     async execute(message, args) {
         const { guild, channel, client, member } = message;
         const memberChannel = member.voice.channel;
