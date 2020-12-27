@@ -20,6 +20,11 @@ client.once("ready", () => {
     console.log("Bot is ready");
 });
 client.on("message", async (message) => {
+    // ? bot mentioned
+    if (message.mentions.has(client.user) && !message.content.includes(" ")) {
+        return message.channel.send(`Ada apa? Butuh bantuan? Coba ketikkan \`${prefix}help\``);
+    }
+    // ? command handling
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
