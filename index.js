@@ -28,17 +28,19 @@ client.on("message", async (message) => {
         client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
-    const errorEmbed = new Discord.MessageEmbed().setColor("#e74c3c");
     // ! required args commands
     if (command.args && !args.length)
         return message.channel.send(
-            errorEmbed
-                .setAuthor("Penggunaan command tidak benar!")
-                .setDescription(`Ketik \`${prefix}help\` untuk menampilkan cara menggunakan command`)
+            new Discord.MessageEmbed()
+                .setColor("#e74c3c")
+                .addField(
+                    "Penggunaan command tidak benar!",
+                    `Ketik \`${prefix}help\` untuk menampilkan cara menggunakan command`
+                )
         );
     // ! server only commands
     if (command.guildOnly && message.channel.type == "dm")
-        return message.channel.send(errorEmbed.setDescription("Command tersebut tidak bisa digunakan di sini!"));
+        return message.channel.send("Command tersebut tidak bisa digunakan di sini!");
     // ! command cooldown
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
@@ -51,9 +53,7 @@ client.on("message", async (message) => {
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
             return message.channel.send(
-                errorEmbed.setDescription(
-                    `Tolong tunggu ${timeLeft.toFixed(1)} detik sebelum menggunakan command \`${command.name}\` lagi`
-                )
+                `Tolong tunggu ${timeLeft.toFixed(1)} detik sebelum menggunakan command \`${command.name}\` lagi`
             );
         }
     }
